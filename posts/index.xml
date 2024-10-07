@@ -1,19 +1,5 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Posts on Manish Chaulagain</title>
-    <link>https://example.org/posts/</link>
-    <description>Recent content in Posts on Manish Chaulagain</description>
-    <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 07 Oct 2024 01:03:40 +1100</lastBuildDate>
-    <atom:link href="https://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Becoming a Senior Software Engineer</title>
-      <link>https://example.org/posts/becoming-sse/</link>
-      <pubDate>Mon, 07 Oct 2024 01:03:40 +1100</pubDate>
-      <guid>https://example.org/posts/becoming-sse/</guid>
-      <description>&lt;p&gt;How do you differentiate a Software Engineer from a Senior Software Engineer? Is it just gliding through the same company for more than X years? Can you leapfrog into SSE by grinding on the weekends?&lt;/p&gt;&#xA;&lt;p&gt;Each company has its definition of what it means to be a Senior Engineer, and rightfully so. But, in this article, I want to emphasize some pointers you can use to self-evaluate your trajectory.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;You are not just a problem solver anymore&lt;/strong&gt;: The first tale-tale sign would be that your responsibilities are more than checking off the JIRA tickets. You are expected to take ownership of the full software development lifecycle— design, develop, test, deploy, monitor, and maintain the system. You need to be the person people want on speed dial when everything’s on fire and the extinguisher is missing!&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Manish Chaulagain</title><link>https://example.org/posts/</link><description>Recent content in Posts on Manish Chaulagain</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 07 Oct 2024 01:03:40 +1100</lastBuildDate><atom:link href="https://example.org/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Becoming a Senior Software Engineer</title><link>https://example.org/posts/becoming-sse/</link><pubDate>Mon, 07 Oct 2024 01:03:40 +1100</pubDate><guid>https://example.org/posts/becoming-sse/</guid><description>&lt;p>How do you differentiate a Software Engineer from a Senior Software Engineer? Is it just gliding through the same company for more than X years? Can you leapfrog into SSE by grinding on the weekends?&lt;/p>
+&lt;p>Each company has its definition of what it means to be a Senior Engineer, and rightfully so. But, in this article, I want to emphasize some pointers you can use to self-evaluate your trajectory.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>You are not just a problem solver anymore&lt;/strong>: The first tale-tale sign would be that your responsibilities are more than checking off the JIRA tickets. You are expected to take ownership of the full software development lifecycle— design, develop, test, deploy, monitor, and maintain the system. You need to be the person people want on speed dial when everything’s on fire and the extinguisher is missing!&lt;/p></description></item></channel></rss>

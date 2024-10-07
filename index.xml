@@ -1,26 +1,18 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Home on Manish Chaulagain</title>
-    <link>https://example.org/</link>
-    <description>Recent content in Home on Manish Chaulagain</description>
-    <generator>Hugo</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 07 Oct 2024 01:03:40 +1100</lastBuildDate>
-    <atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Becoming a Senior Software Engineer</title>
-      <link>https://example.org/posts/becoming-sse/</link>
-      <pubDate>Mon, 07 Oct 2024 01:03:40 +1100</pubDate>
-      <guid>https://example.org/posts/becoming-sse/</guid>
-      <description>&lt;p&gt;How do you differentiate a Software Engineer from a Senior Software Engineer? Is it just gliding through the same company for more than X years? Can you leapfrog into SSE by grinding on the weekends?&lt;/p&gt;&#xA;&lt;p&gt;Each company has its definition of what it means to be a Senior Engineer, and rightfully so. But, in this article, I want to emphasize some pointers you can use to self-evaluate your trajectory.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;You are not just a problem solver anymore&lt;/strong&gt;: The first tale-tale sign would be that your responsibilities are more than checking off the JIRA tickets. You are expected to take ownership of the full software development lifecycle— design, develop, test, deploy, monitor, and maintain the system. You need to be the person people want on speed dial when everything’s on fire and the extinguisher is missing!&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>Senior Software Engineer</title>
-      <link>https://example.org/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://example.org/about/</guid>
-      <description>&lt;h3 id=&#34;summary&#34;&gt;SUMMARY&lt;/h3&gt;&#xA;&lt;p&gt;Pragmatic Software Engineer with 7 years of Full-Stack Expertise. I have&#xA;successfully contributed to projects for various U.S. and Australian companies. A dedicated,&#xA;self-motivated, and ambitious Software developer who enjoys wearing multiple hats in a&#xA;cross-functional team.&lt;/p&gt;&#xA;&lt;p&gt;I have battle-tested experience building RESTfulAPIs, Microservices, and Web Applications&#xA;that are maintainable, performant, and robust.&lt;/p&gt;&#xA;&lt;h3 id=&#34;competence&#34;&gt;COMPETENCE&lt;/h3&gt;&#xA;&lt;p&gt;&lt;strong&gt;Programming Languages&lt;/strong&gt;: Go, Typescript, Node.js, Python&lt;br&gt;&#xA;&lt;strong&gt;Framework/Library&lt;/strong&gt;: Nextjs, React, Entgo, Tailwind, ChakraUI, Redux, tRPC&lt;br&gt;&#xA;&lt;strong&gt;Database&lt;/strong&gt;: PostgreSQL, AWS DynamoDB, MongoDB&lt;br&gt;&#xA;&lt;strong&gt;Tools&lt;/strong&gt;: Docker, Terraform, AWS, K8s, CI/CD, Argo CD&lt;br&gt;&#xA;&lt;strong&gt;ProjectManagement&lt;/strong&gt;:Linear, JIRA(Scrum,Kanban), CCPM, Notion&lt;br&gt;&#xA;&lt;strong&gt;Misc&lt;/strong&gt;: Posthog, Sentry, PlanetScale, OpenAPI 3.0, Temporal&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Home on Manish Chaulagain</title><link>https://example.org/</link><description>Recent content in Home on Manish Chaulagain</description><generator>Hugo</generator><language>en-us</language><lastBuildDate>Mon, 07 Oct 2024 01:03:40 +1100</lastBuildDate><atom:link href="https://example.org/index.xml" rel="self" type="application/rss+xml"/><item><title>Becoming a Senior Software Engineer</title><link>https://example.org/posts/becoming-sse/</link><pubDate>Mon, 07 Oct 2024 01:03:40 +1100</pubDate><guid>https://example.org/posts/becoming-sse/</guid><description>&lt;p>How do you differentiate a Software Engineer from a Senior Software Engineer? Is it just gliding through the same company for more than X years? Can you leapfrog into SSE by grinding on the weekends?&lt;/p>
+&lt;p>Each company has its definition of what it means to be a Senior Engineer, and rightfully so. But, in this article, I want to emphasize some pointers you can use to self-evaluate your trajectory.&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;strong>You are not just a problem solver anymore&lt;/strong>: The first tale-tale sign would be that your responsibilities are more than checking off the JIRA tickets. You are expected to take ownership of the full software development lifecycle— design, develop, test, deploy, monitor, and maintain the system. You need to be the person people want on speed dial when everything’s on fire and the extinguisher is missing!&lt;/p></description></item><item><title>Senior Software Engineer</title><link>https://example.org/about/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://example.org/about/</guid><description>&lt;h3 id="summary">SUMMARY&lt;/h3>
+&lt;p>Pragmatic Software Engineer with 7 years of Full-Stack Expertise. I have
+successfully contributed to projects for various U.S. and Australian companies. A dedicated,
+self-motivated, and ambitious Software developer who enjoys wearing multiple hats in a
+cross-functional team.&lt;/p>
+&lt;p>I have battle-tested experience building RESTfulAPIs, Microservices, and Web Applications
+that are maintainable, performant, and robust.&lt;/p>
+&lt;h3 id="competence">COMPETENCE&lt;/h3>
+&lt;p>&lt;strong>Programming Languages&lt;/strong>: Go, Typescript, Node.js, Python&lt;br>
+&lt;strong>Framework/Library&lt;/strong>: Nextjs, React, Entgo, Tailwind, ChakraUI, Redux, tRPC&lt;br>
+&lt;strong>Database&lt;/strong>: PostgreSQL, AWS DynamoDB, MongoDB&lt;br>
+&lt;strong>Tools&lt;/strong>: Docker, Terraform, AWS, K8s, CI/CD, Argo CD&lt;br>
+&lt;strong>ProjectManagement&lt;/strong>:Linear, JIRA(Scrum,Kanban), CCPM, Notion&lt;br>
+&lt;strong>Misc&lt;/strong>: Posthog, Sentry, PlanetScale, OpenAPI 3.0, Temporal&lt;/p></description></item></channel></rss>
