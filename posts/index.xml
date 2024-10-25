@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Manish Chaulagain</title>
+    <link>https://eddie023.github.io/posts/</link>
+    <description>Recent content in Posts on Manish Chaulagain</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 25 Oct 2024 10:55:31 +1100</lastBuildDate>
+    <atom:link href="https://eddie023.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Multi-Tenancy Using Row Level Security in Postgres</title>
+      <link>https://eddie023.github.io/posts/multi-tenancy-with-rls/</link>
+      <pubDate>Fri, 25 Oct 2024 10:55:31 +1100</pubDate>
+      <guid>https://eddie023.github.io/posts/multi-tenancy-with-rls/</guid>
+      <description>&lt;p&gt;Monitoring and managing multiple tenants can add operational complexity, especially for small teams with limited resources. &#xA;To balance the need for rapid feature development with the benefits of multi-tenancy, one common approach is to use a shared database model with application-level tenancy control. However, relying on developers to manually add &lt;code&gt;WHERE tenant_id=&amp;lt;&amp;gt;&lt;/code&gt; to every SQL query is highly risky and prone to errors. Perhaps, there is a better way?&lt;/p&gt;&#xA;&lt;h2 id=&#34;row-levelsecurity&#34;&gt;Row Level Security&lt;/h2&gt;&#xA;&lt;p&gt;PostgreSQL enables you to assign &lt;a href=&#34;https://www.postgresql.org/docs/current/ddl-rowsecurity.html&#34;&gt;row-level security policies&lt;/a&gt;, allowing you to control which rows are returned by queries based on the privileges defined in the policy. This is an effective method to ensure queries only return tenant-specific data. By defining policies that grant access to a single tenant at a time, you shift the responsibility for data access control from the application to the database, significantly reducing the risk of data leakage.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Becoming a Senior Software Engineer</title>
+      <link>https://eddie023.github.io/posts/becoming-sse/</link>
+      <pubDate>Mon, 07 Oct 2024 01:03:40 +1100</pubDate>
+      <guid>https://eddie023.github.io/posts/becoming-sse/</guid>
+      <description>&lt;p&gt;How do you differentiate a Software Engineer from a Senior Software Engineer? Is it just gliding through the same company for more than X years? Can you leapfrog into SSE by grinding on the weekends?&lt;/p&gt;&#xA;&lt;p&gt;Each company has its definition of what it means to be a Senior Engineer, and rightfully so. But, in this article, I want to emphasize some pointers you can use to self-evaluate your trajectory.&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;&lt;strong&gt;You are not just a problem solver anymore&lt;/strong&gt;: The first tale-tale sign would be that your responsibilities are more than checking off the JIRA tickets. You are expected to take ownership of the full software development lifecycle— design, develop, test, deploy, monitor, and maintain the system. You need to be the person people want on speed dial when everything’s on fire and the extinguisher is missing!&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

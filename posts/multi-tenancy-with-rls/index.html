@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en-us"
+  dir="ltr">
+
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+
+
+<link rel="icon" type="image/ico" href="https://eddie023.github.io//favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://eddie023.github.io//favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://eddie023.github.io//favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://eddie023.github.io//android-chrome-192x192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://eddie023.github.io//apple-touch-icon.png">
+
+<meta name="description" content=""/>
+
+<title>
+    
+    Multi-Tenancy Using Row Level Security in Postgres | Manish Chaulagain
+    
+</title>
+
+<link rel="canonical" href="https://eddie023.github.io/posts/multi-tenancy-with-rls/"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/assets/combined.min.a6824bbee0d90d5af09fed9b70395ce7076b615e315037455d903314e96ef91b.css" media="all">
+
+
+
+
+
+
+
+
+
+  </head>
+
+  
+
+  
+  
+  
+
+  <body class="auto">
+
+    <div class="content">
+      <header>
+        
+
+<div class="header">
+
+    
+
+    <h1 class="header-title">Manish Chaulagain</h1>
+
+    <div class="flex">
+        
+
+        
+        
+      
+        <p class="small ">
+            <a href="/" >
+                /home
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/posts" >
+                /posts
+            </a>
+        </p>
+        
+      
+        <p class="small ">
+            <a href="/about" >
+                /about
+            </a>
+        </p>
+        
+        
+    </div>
+
+    
+
+</div>
+
+      </header>
+
+      <main class="main">
+        
+
+
+
+
+
+
+
+<div >
+
+  <div class="single-intro-container">
+
+    
+
+    <h1 class="single-title">Multi-Tenancy Using Row Level Security in Postgres</h1>
+    
+
+    
+
+    <p class="single-readtime">
+      
+      
+      
+      <time datetime="2024-10-25T10:55:31&#43;11:00">October 25, 2024</time>
+      
+
+      
+    </p>
+
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  <div class="single-content">
+    <p>Monitoring and managing multiple tenants can add operational complexity, especially for small teams with limited resources. 
+To balance the need for rapid feature development with the benefits of multi-tenancy, one common approach is to use a shared database model with application-level tenancy control. However, relying on developers to manually add <code>WHERE tenant_id=&lt;&gt;</code> to every SQL query is highly risky and prone to errors. Perhaps, there is a better way?</p>
+<h2 id="row-levelsecurity">Row Level Security</h2>
+<p>PostgreSQL enables you to assign <a href="https://www.postgresql.org/docs/current/ddl-rowsecurity.html">row-level security policies</a>, allowing you to control which rows are returned by queries based on the privileges defined in the policy. This is an effective method to ensure queries only return tenant-specific data. By defining policies that grant access to a single tenant at a time, you shift the responsibility for data access control from the application to the database, significantly reducing the risk of data leakage.</p>
+<p>Before we proceed, you must be aware that the Row-Level Policies do not apply to the table owner. Therefore, we must create a different user to enforce privileges. </p>
+<ul>
+<li>Create a new <code>ROLE</code> with login access such that we can use it in our application. </li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">CREATE</span> <span style="font-weight:bold;text-decoration:underline">ROLE</span> dev <span style="font-weight:bold;text-decoration:underline">WITH</span> LOGIN PASSWORD <span style="color:#666;font-style:italic">&#39;supersecret&#39;</span>;
+</span></span></code></pre></div><ul>
+<li>Create <code>tenant</code> table that contains the unique <code>tenant_id</code> that we will use the filter with RLS. </li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">CREATE</span> <span style="font-weight:bold;text-decoration:underline">TABLE</span> app.tenant (
+</span></span><span style="display:flex;"><span>    id <span style="font-weight:bold;font-style:italic">INTEGER</span> <span style="font-weight:bold;text-decoration:underline">PRIMARY</span> <span style="font-weight:bold;text-decoration:underline">KEY</span>,
+</span></span><span style="display:flex;"><span>    name <span style="font-weight:bold;font-style:italic">VARCHAR</span>(255) <span style="font-weight:bold;text-decoration:underline">NOT</span> <span style="font-weight:bold;text-decoration:underline">NULL</span>
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-style:italic">/** Seed some dummy data **/</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">INSERT</span> <span style="font-weight:bold;text-decoration:underline">INTO</span> app.tenant(id, name) <span style="font-weight:bold;text-decoration:underline">VALUES</span> (1, <span style="color:#666;font-style:italic">&#39;one&#39;</span>), (2, <span style="color:#666;font-style:italic">&#39;two&#39;</span>);
+</span></span></code></pre></div><ul>
+<li>Create <code>product</code> table that we will use to demonstrate enforcing RLS</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">CREATE</span> <span style="font-weight:bold;text-decoration:underline">TABLE</span> app.product (
+</span></span><span style="display:flex;"><span>    id <span style="font-weight:bold;font-style:italic">SERIAL</span> <span style="font-weight:bold;text-decoration:underline">PRIMARY</span> <span style="font-weight:bold;text-decoration:underline">KEY</span>,
+</span></span><span style="display:flex;"><span>    tenant_id <span style="font-weight:bold;font-style:italic">INTEGER</span>,
+</span></span><span style="display:flex;"><span>    name <span style="font-weight:bold;font-style:italic">VARCHAR</span>(255) <span style="font-weight:bold;text-decoration:underline">NOT</span> <span style="font-weight:bold;text-decoration:underline">NULL</span>
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#888;font-style:italic">/** Seed some dummy data **/</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">INSERT</span> <span style="font-weight:bold;text-decoration:underline">INTO</span> app.product (tenant_id, name) 
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">VALUES</span> 
+</span></span><span style="display:flex;"><span>    (1, <span style="color:#666;font-style:italic">&#39;Product A1&#39;</span>),
+</span></span><span style="display:flex;"><span>    (1, <span style="color:#666;font-style:italic">&#39;Product A2&#39;</span>),
+</span></span><span style="display:flex;"><span>    (2, <span style="color:#666;font-style:italic">&#39;Product B1&#39;</span>),
+</span></span><span style="display:flex;"><span>    (2, <span style="color:#666;font-style:italic">&#39;Product B2&#39;</span>),
+</span></span><span style="display:flex;"><span>    (1, <span style="color:#666;font-style:italic">&#39;Product C1&#39;</span>),
+</span></span><span style="display:flex;"><span>    (1, <span style="color:#666;font-style:italic">&#39;Product C2&#39;</span>);
+</span></span></code></pre></div><ul>
+<li>Grant privileges to our newly created tables for our <code>dev</code> ROLE</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">GRANT</span> <span style="font-weight:bold;text-decoration:underline">ALL</span> <span style="font-weight:bold;text-decoration:underline">PRIVILEGES</span> <span style="font-weight:bold;text-decoration:underline">ON</span> <span style="font-weight:bold;text-decoration:underline">ALL</span> TABLES <span style="font-weight:bold;text-decoration:underline">IN</span> <span style="font-weight:bold;text-decoration:underline">SCHEMA</span> <span style="font-weight:bold;text-decoration:underline">public</span> <span style="font-weight:bold;text-decoration:underline">TO</span> dev;
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">GRANT</span> <span style="font-weight:bold;text-decoration:underline">ALL</span> <span style="font-weight:bold;text-decoration:underline">PRIVILEGES</span> <span style="font-weight:bold;text-decoration:underline">ON</span> <span style="font-weight:bold;text-decoration:underline">ALL</span> SEQUENCES <span style="font-weight:bold;text-decoration:underline">IN</span> <span style="font-weight:bold;text-decoration:underline">SCHEMA</span> <span style="font-weight:bold;text-decoration:underline">public</span> <span style="font-weight:bold;text-decoration:underline">TO</span> dev;
+</span></span></code></pre></div><ul>
+<li>Enable Row Level Security in product . Then, create a policy <code>tenant_isolation_policy</code> such that we check the <code>app.current_tenant</code> value to add the correct filter. </li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">ALTER</span> <span style="font-weight:bold;text-decoration:underline">TABLE</span> product ENABLE <span style="font-weight:bold;text-decoration:underline">ROW</span> <span style="font-weight:bold;text-decoration:underline">LEVEL</span> <span style="font-weight:bold;text-decoration:underline">SECURITY</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">CREATE</span> POLICY tenant_isolation_policy <span style="font-weight:bold;text-decoration:underline">ON</span> product 
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">USING</span> (tenant_id = current_setting(<span style="color:#666;font-style:italic">&#39;app.current_tenant&#39;</span>)::<span style="font-weight:bold;font-style:italic">INTEGER</span>);
+</span></span></code></pre></div><p>Done 🎉 That&rsquo;s all there is. Now let&rsquo;s see it in action.</p>
+<h2 id="demonstration">Demonstration</h2>
+<p>Logging in with the role devand running <code>SELECT * FROM product;</code> will return</p>
+<pre tabindex="0"><code>ERROR: unrecognized configuration parameter &#34;app.current_tenant&#34;
+</code></pre><p>This is expected since we haven&rsquo;t configured app.current_tenant it yet. </p>
+<ul>
+<li>SET <code>app.current_tenant</code> using <code>SET</code> command</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sql" data-lang="sql"><span style="display:flex;"><span><span style="color:#888;font-style:italic">/** You can run SHOW app.current_tenant to verify
+</span></span></span><span style="display:flex;"><span><span style="color:#888;font-style:italic">the current value **/</span>
+</span></span><span style="display:flex;"><span><span style="font-weight:bold;text-decoration:underline">SET</span> app.current_tenant=1;
+</span></span><span style="display:flex;"><span>3. Now running <span style="font-weight:bold;text-decoration:underline">SELECT</span> * <span style="font-weight:bold;text-decoration:underline">FROM</span> product; will <span style="font-weight:bold;text-decoration:underline">return</span> <span style="font-weight:bold;text-decoration:underline">only</span> tenant 1 <span style="font-weight:bold;text-decoration:underline">specific</span> <span style="font-weight:bold;text-decoration:underline">rows</span>. <span style="">🆒</span>
+</span></span><span style="display:flex;"><span>id  | tenant_id |    name    
+</span></span><span style="display:flex;"><span><span style="color:#888;font-style:italic">----+-----------+------------
+</span></span></span><span style="display:flex;"><span><span style="color:#888;font-style:italic"></span>  1 |         1 | Product A1 
+</span></span><span style="display:flex;"><span>  2 |         1 | Product A2 
+</span></span><span style="display:flex;"><span>  5 |         1 | Product C1 
+</span></span><span style="display:flex;"><span>  6 |         1 | Product C2 
+</span></span></code></pre></div><p>Try changing the value  <code>app.current_tenant</code> to something else and see how Postgres automatically filters the row based on our <code>tenant_isolation_policy</code>. In our application layer, we can leverage this by dynamically setting the value of this configuration parameter to achieve our desired single database multi-tenancy. 🎉</p>
+<p>For a full demonstration of how we can achieve this in Golang by dynamically setting and getting them <code>tenant_id</code> in the request context with the full example, you can check the repo here: <a href="https://github.com/Eddie023/multi-tenancy-with-RLS">https://github.com/Eddie023/multi-tenancy-with-RLS</a></p>
+
+    
+  </div>
+
+  
+
+
+  
+
+  
+  
+
+<div class="single-pagination">
+    <hr />
+
+    <div class="flex">
+
+        <div class="single-pagination-prev">
+            
+            <div class="single-pagination-container-prev">
+                <div class="single-pagination-text">←</div>
+                <div class="single-pagination-text">
+                    <a href="/posts/becoming-sse/">
+                        Becoming a Senior Software Engineer
+                    </a>
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="single-pagination-next">
+            
+        </div>
+
+    </div>
+
+    <hr />
+</div>
+
+
+
+  
+
+  
+
+  
+  <div class="back-to-top">
+    <a href="#top">
+      back to top
+    </a>
+  </div>
+  
+
+</div>
+
+
+      </main>
+    </div>
+
+    <footer>
+      
+
+    
+    <p>Powered by
+        <a href="https://gohugo.io/">Hugo</a>
+        and
+        <a href="https://github.com/tomfran/typo">tomfran/typo</a>
+    </p>
+    
+    
+    
+
+
+
+    </footer>
+    
+  </body>
+
+  <script>
+
+  function isAuto() {
+    return document.body.classList.contains("auto");
+  }
+
+  function setTheme() {
+    if (!isAuto()) {
+      return
+    }
+
+    document.body.classList.remove("auto");
+    let cls = "light";
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      cls = "dark";
+    }
+
+    document.body.classList.add(cls);
+  }
+
+  function invertBody() {
+    document.body.classList.toggle("dark");
+    document.body.classList.toggle("light");
+  }
+
+  if (isAuto()) {
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(invertBody);
+  }
+
+  setTheme();
+
+</script>
+
+</html>
